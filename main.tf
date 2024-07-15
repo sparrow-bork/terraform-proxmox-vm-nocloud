@@ -1,5 +1,3 @@
-
-
 resource "proxmox_cloud_init_disk" "this" {
   count = var.vm_count
 
