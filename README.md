@@ -1,6 +1,38 @@
 # terraform-proxmox-vm-nocloud
 Terraform module for provisioning proxmox VM with nocloud
 
+## Usage
+
+```terraform
+module "vm-nocloud" {
+  source  = "sparrow-bork/vm-nocloud/proxmox"
+  version = "~> 0.0.1"
+
+  name              = "test"
+  vm_count          = 3
+  target_node       = "pve"
+  storage_name      = "ssd"
+  user_data         = ""
+  template_to_clone = "template-nocloud"
+  vm_onboot         = true
+  vm_state          = "running"
+  vm_protection     = true
+
+  resource_allocation = {
+    vcpus   = 1
+    memory  = 512
+    storage = 128
+  }
+
+  network = {
+    ip_subnet  = "192.168.1.0"
+    ip_hostnum = 10
+    ip_prefix  = 24
+    ip_gateway = "192.168.1.1"
+  }
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
