@@ -6,7 +6,7 @@ resource "proxmox_cloud_init_disk" "this" {
   storage  = var.storage_name
 
   meta_data = yamlencode({
-    instance_id    = sha1(var.name)
+    instance_id    = sha1("${var.name}-${count.index}")
     local-hostname = "${var.name}-${count.index}"
   })
 
@@ -49,10 +49,10 @@ resource "proxmox_vm_qemu" "this" {
 
   cpu = "x86-64-v2-AES"
 
-  cores   = 2
-  vcpus   = 2
-  sockets = 1
-  memory  = 2560
+  cores   = var.resource_allocation.cores
+  vcpus   = var.resource_allocation.vcpus
+  sockets = var.resource_allocation.sockets
+  memory  = var.resource_allocation.memory
 
   scsihw  = "virtio-scsi-single"
   os_type = "cloud-init" # cloud-init, # ubuntu, # centos
