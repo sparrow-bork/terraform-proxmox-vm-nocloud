@@ -72,7 +72,7 @@ variable "resource_allocation" {
     storage = 128
   }
   validation {
-    condition     = var.resource_allocation.cores > var.resource_allocation.vcpus
+    condition     = var.resource_allocation.cores >= var.resource_allocation.vcpus
     error_message = "CPU cores cannot be lesser than VCPUs."
   }
   validation {
