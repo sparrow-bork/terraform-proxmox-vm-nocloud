@@ -12,20 +12,13 @@ variable "target_node" {
 variable "storage_name" {
   description = "The storage to deploy to"
   type        = string
-  default     = "ssd" # or local-lvm
-
-  validation {
-    condition     = contains(["local-lvm", "ssd"], var.storage_name)
-    error_message = "Valid values for var: storage_name are (local-lvm, ssd)."
-  }
+  default     = "ssd"
 }
 
-variable "user_data" {}
-
-variable "template_to_clone" {
-  description = "Template name to clone for the VM"
+variable "user_data" {
+  description = "The user-data config to supply for cloud-init"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "vm_onboot" {
@@ -35,7 +28,7 @@ variable "vm_onboot" {
 }
 
 variable "vm_state" {
-  description = "The state of the VM"
+  description = "The state of the VM after creation"
   type        = string
   default     = "running"
 
@@ -55,6 +48,11 @@ variable "vm_count" {
   description = "Number of VMs to create"
   type        = number
   default     = 1
+
+  validation {
+    condition     = var.vm_count > 0
+    error_message = "Variable vm_count cannot be less than 1."
+  }
 }
 
 variable "resource_allocation" {
@@ -73,6 +71,30 @@ variable "resource_allocation" {
     memory  = 256
     storage = 128
   }
+  validation {
+    condition     = var.resource_allocation.cores > var.resource_allocation.vcpus
+    error_message = "CPU cores cannot be lesser than VCPUs."
+  }
+  validation {
+    condition     = var.resource_allocation.cores > 0
+    error_message = "CPU cores cannot be less than 1"
+  }
+  validation {
+    condition     = var.resource_allocation.vcpus > 0
+    error_message = "VCPUs cannot be less than 1"
+  }
+  validation {
+    condition     = var.resource_allocation.sockets > 0
+    error_message = "CPU socket cannot be less than 1"
+  }
+  validation {
+    condition     = var.resource_allocation.memory > 0
+    error_message = "Memory cannot be less than 1GB"
+  }
+  validation {
+    condition     = var.resource_allocation.storage > 0
+    error_message = "Storage cannot be less than 1GB"
+  }
 }
 
 variable "network" {
@@ -89,11 +111,15 @@ variable "network" {
 variable "bootable_iso" {
   description = "The ISO file name to boot from"
   type        = string
-  default     = "ssd:iso/talos-nocloud-amd64.iso"
 }
 
 variable "skip_vm_id" {
   description = "The number to increment for VM ids"
   type        = number
   default     = 0
+
+  validation {
+    condition     = var.skip_vm_id >= 0
+    error_message = "Variable skip_vm_id cannot be less than 0."
+  }
 }
