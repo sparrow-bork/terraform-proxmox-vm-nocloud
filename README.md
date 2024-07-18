@@ -13,12 +13,14 @@ module "vm-nocloud" {
   target_node       = "pve"
   storage_name      = "ssd"
   user_data         = ""
-  template_to_clone = "template-nocloud"
   vm_onboot         = true
   vm_state          = "running"
   vm_protection     = true
+  bootable_iso      = "ssd:iso/talos-nocloud-amd64.iso"
 
   resource_allocation = {
+    sockets = 1
+    cores   = 1
     vcpus   = 1
     memory  = 512
     storage = 128
