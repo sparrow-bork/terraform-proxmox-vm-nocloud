@@ -39,10 +39,6 @@ resource "proxmox_vm_qemu" "this" {
   vmid        = 5000 + var.skip_vm_id + count.index
   target_node = var.target_node
 
-  # template to clone
-  clone      = var.template_to_clone
-  full_clone = true
-
   onboot     = var.vm_onboot
   vm_state   = var.vm_state
   protection = var.vm_protection
